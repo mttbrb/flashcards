@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(new MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    _words.shuffle();
     return new MaterialApp(
       title: 'Sight Words',
       theme: new ThemeData(
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
         // and press "r" in the console where you ran "flutter run".
         // We call this a "hot reload". Notice that the counter didn't
         // reset back to zero -- the application is not restarted.
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blue,
       ),
       home: new MyHomePage(title: 'Sight Words'),
     );
@@ -48,15 +50,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful,
-  // meaning that it has a State object (defined below) that contains
-  // fields that affect how it looks.
-
-  // This class is the configuration for the state. It holds the
-  // values (in this case the title) provided by the parent (in this
-  // case the App widget) and used by the build method of the State.
-  // Fields in a Widget subclass are always marked "final".
 
   final String title;
 
@@ -74,24 +67,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _soundOutWord() {
+    SystemSound.play(SystemSoundType.click);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        // Here we take the value from the MyHomePage object that
-        // was created by the App.build method, and use it to set
-        // our appbar title.
-        title: new Text(config.title),
-      ),
-      body: new Center(
-        child: new Text('${_words[_counter]}', style: new TextStyle(fontSize: 200.0)),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // This trailing comma tells the Dart formatter to use
-      // a style that looks nicer for build methods.
-    );
+    return new GestureDetector(
+           child: new Scaffold(
+                  appBar: new AppBar(title: new Text(config.title)),
+                  body: new Center(child: new Text('${_words[_counter]}', style: new TextStyle(fontSize: 150.0))),
+                  floatingActionButton: new FloatingActionButton(
+                                        onPressed: _soundOutWord,
+                                        tooltip: 'Increment',
+                                        child: new Icon(Icons.speaker),
+                                        )), // This trailing comma tells the Dart formatter to use
+           onTap: _incrementCounter);
   }
 }
